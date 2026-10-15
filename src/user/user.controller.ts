@@ -1,5 +1,6 @@
 
-import { Controller, Get, Post, Query, Param } from '@nestjs/common';
+import { Controller, Get, Post, Query, Param, Body } from '@nestjs/common';
+import { CreateUserDto } from '../dto/create-user.dto.js';
 
 @Controller('user')
 export class UserController {
@@ -47,9 +48,13 @@ export class UserController {
   }
 
   // Create user
-  @Post('create')
-  createUser() {
+  @Post()
+  createUser(@Body() body: CreateUserDto,CreateUserDto: CreateUserDto   ) {
+    // In a real application, you would typically save the user to a database here
+    this.users.push({ id: this.users.length + 1, name: body.name });
+
     return {
+      data:CreateUserDto,
       message: 'User created successfully',
     };
   }
