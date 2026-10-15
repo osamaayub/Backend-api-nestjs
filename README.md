@@ -1,12 +1,13 @@
-# JSM NestJS API
+# NestJS Crash Course — JavaScript Mastery
 
-A small REST API built with [NestJS](https://nestjs.com/), TypeScript, and Express. The project demonstrates NestJS modules, controllers, DTOs, automated tests, and optional application observability with NestJS Observe.
+A hands-on REST API from the JavaScript Mastery NestJS crash course. It uses [NestJS](https://nestjs.com/), TypeScript, and Express to demonstrate modules, controllers, DTOs, CRUD-style routes, automated tests, and optional application observability with NestJS Observe.
 
 > This repository contains a NestJS backend, not a Next.js frontend.
 
 ## Features
 
 - User endpoints for listing, searching, retrieving, and creating users
+- Updating users with a partial request body
 - Filtering users by name with a query parameter
 - DTO-based request handling for user creation
 - TypeScript and strict project configuration
@@ -65,6 +66,7 @@ The API uses the `/user` resource path.
 | `GET` | `/user/search?name=john` | Search users by name |
 | `GET` | `/user/:id` | Return a user by numeric ID |
 | `POST` | `/user` | Create a user |
+| `PUT` | `/user/:id` | Update an existing user |
 
 ### Example requests
 
