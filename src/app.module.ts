@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule } from '@nestjs/common';
 import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
@@ -20,4 +20,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  async configure(consumer: import("@nestjs/common").MiddlewareConsumer): Promise<void> {
+    consumer.apply((await import("./middleware/api-key.middleware.js")).ApiKeyMiddleware).forRoutes('*');
+  }
+}
