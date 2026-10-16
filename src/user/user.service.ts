@@ -1,54 +1,75 @@
-
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateUserDto } from '../dto/create-user.dto.js';
+import { UpdateUserDto } from '../dto/update-user.dto.js';
 import { LoggerService } from './user.logger.js';
 
-interface User {
-  id: string;
+export interface User {
+  id: number;
   name: string;
-  password: string;
 }
 
 @Injectable()
 export class UserService {
-    constructor(private readonly loggerService: LoggerService) {
-        this.loggerService.log('UserService initialized');
-    }   
-  private users: User[] = [];
+  private users: User[] = [
+    { id: 1, name: 'John Doe' },
+    { id: 2, name: 'Jane Smith' },
+    { id: 3, name: 'John Smith' },
+  ];
 
-  // Get all users
-  public getAllUsers(): User[] {
-    return this.users;
+  constructor(private readonly loggerService: LoggerService) {
+    this.loggerService.log('UserService initialized');
   }
 
-  // Create a user
-  public createUser(user: User): User {
-    this.users.push(user);
+  public getUsers(name?: string): User[] {
+    if (!name) {
+      return this.users;
+    }
+
+    return this.users.filter((user) =>
+      user.name.toLowerCase().includes(name.toLowerCase()),
+    );
+  }
+
+  public getUserById(id: number): User {
+    const user = this.users.find((item) => item.id === id);
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
     return user;
   }
 
-  // Get user by ID
-  public getUserById(id: string): User | undefined {
-    return this.users.find((user) => user.id === id);
+  public createUser(user: CreateUserDto) {
+    const newUser: User = {
+      id: this.users.length + 1,
+      name: user.name,
+    };
+
+    this.users.push(newUser);
+
+    return {
+      data: newUser,
+      message: 'User created successfully',
+    };
   }
 
-  // Update user by ID
-  public updateUser(
-    id: string,
-    updatedUser: Partial<User>,
-  ): User | undefined {
-    const user = this.users.find((user) => user.id === id);
+  public updateUser(id: number, updatedUser: UpdateUserDto) {
+    const user = this.users.find((item) => item.id === id);
 
     if (!user) {
-      return undefined;
+      throw new NotFoundException(`User  not found`);
     }
 
     Object.assign(user, updatedUser);
 
-    return user;
+    return {
+      data: user,
+      message: 'User updated successfully',
+    };
   }
 
-  // Delete user by ID
-  public deleteUser(id: string): boolean {
+  public deleteUser(id: number): boolean {
     const index = this.users.findIndex((user) => user.id === id);
 
     if (index === -1) {

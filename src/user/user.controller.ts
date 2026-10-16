@@ -1,73 +1,42 @@
-
-import { Controller, Get, Post, Put, Query, Param, Body } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto.js';
 import { UpdateUserDto } from '../dto/update-user.dto.js';
+import { UserService } from './user.service.js';
 
 @Controller('user')
 export class UserController {
-    private users = [
-        {
-            id: 1,
-            name: 'John Doe',
-        },
-        {
-            id: 2,
-            name: 'Jane Smith',
-        },
-        {
-            id: 3,
-            name: 'John Smith',
-        },
-    ];
+  constructor(private readonly userService: UserService) {}
 
-    // Get all users or filter by name
-    @Get()
-    getUsers(@Query('name') name?: string) {
-        if (!name) {
-            return this.users;
-        }
+  @Get()
+  getUsers(@Query('name') name?: string) {
+    return this.userService.getUsers(name);
+  }
 
-        return this.users.filter((user) =>
-            user.name.toLowerCase().includes(name.toLowerCase()),
-        );
-    }
+  @Get('search')
+  searchUsers(@Query('name') name: string) {
+    return this.userService.getUsers(name);
+  }
 
-    // Search users by name
-    @Get('search')
-    getUserByName(@Query('name') name: string) {
-        return this.users.filter((user) =>
-            user.name.toLowerCase().includes(name.toLowerCase()),
-        );
-    }
+  @Get(':id')
+  getUserById(@Param('id') id: string) {
+    return this.userService.getUserById(Number(id));
+  }
 
-    // Get user by ID
-    @Get(':id')
-    getUserById(@Param('id') id: string) {
-        const user = this.users.find((user) => user.id === Number(id));
+  @Post()
+  createUser(@Body() body: CreateUserDto) {
+    return this.userService.createUser(body);
+  }
 
-        return user ?? { message: 'User not found' };
-    }
-
-    // Create user
-    @Post()
-    createUser(@Body() body: CreateUserDto, CreateUserDto: CreateUserDto) {
-        // In a real application, you would typically save the user to a database here
-        this.users.push({ id: this.users.length + 1, name: body.name });
-
-        return {
-            data: CreateUserDto,
-            message: 'User created successfully',
-        };
-    }
-    @Put(':id')
-    updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-        const userIndex = this.users.findIndex((user) => user.id === Number(id));
-        if (userIndex === -1) {
-            return { message: 'User not found' };
-        }
-        this.users[userIndex] = { ...this.users[userIndex], ...body };
-        return { message: 'User updated successfully' };
-    }
+  @Put(':id')
+  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+    return this.userService.updateUser(Number(id), body);
+  }
 }
-
-
