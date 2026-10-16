@@ -61,8 +61,8 @@ The API uses the `/user` resource path.
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
-| `GET` | `/user/all` | Return all users |
-| `GET` | `/user/all?name=john` | Return users whose names contain `john` |
+| `GET` | `/user` | Return all users |
+| `GET` | `/user?name=john` | Return users whose names contain `john` |
 | `GET` | `/user/search?name=john` | Search users by name |
 | `GET` | `/user/:id` | Return a user by numeric ID |
 | `POST` | `/user` | Create a user |
@@ -73,7 +73,7 @@ The API uses the `/user` resource path.
 Get all users:
 
 ```bash
-curl http://localhost:3000/user/all
+curl http://localhost:3000/user
 ```
 
 Search for a user:

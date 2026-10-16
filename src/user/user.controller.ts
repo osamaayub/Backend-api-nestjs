@@ -21,7 +21,7 @@ export class UserController {
     ];
 
     // Get all users or filter by name
-    @Get('all')
+    @Get()
     getUsers(@Query('name') name?: string) {
         if (!name) {
             return this.users;

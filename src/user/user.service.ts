@@ -1,5 +1,6 @@
 
 import { Injectable } from '@nestjs/common';
+import { LoggerService } from './user.logger.js';
 
 interface User {
   id: string;
@@ -9,6 +10,9 @@ interface User {
 
 @Injectable()
 export class UserService {
+    constructor(private readonly loggerService: LoggerService) {
+        this.loggerService.log('UserService initialized');
+    }   
   private users: User[] = [];
 
   // Get all users
