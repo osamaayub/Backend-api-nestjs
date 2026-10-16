@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -26,8 +27,8 @@ export class UserController {
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: string) {
-    return this.userService.getUserById(Number(id));
+  getUserById(@Param('id',ParseIntPipe) id: number) {
+    return this.userService.getUserById(id);
   }
 
   @Post()
