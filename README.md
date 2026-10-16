@@ -10,6 +10,7 @@ A hands-on REST API from the JavaScript Mastery NestJS crash course. It uses [Ne
 - Updating users with a partial request body
 - Filtering users by name with a query parameter
 - DTO-based request handling for user creation
+- Middleware extension point for future API-key authentication
 - TypeScript and strict project configuration
 - Unit and end-to-end tests powered by [Vitest](https://vitest.dev/)
 - Optional distributed tracing, metrics, logs, and error telemetry through [NestJS Observe](https://observe.nestjs.com/)
@@ -98,10 +99,33 @@ curl -X POST http://localhost:3000/user \
 
 The current implementation stores users in memory. Data is reset whenever the application restarts, and no database is required for local development.
 
+## API-key middleware
+
+The project includes an `ApiKeyMiddleware` at `src/middleware/api-key.middleware.ts`. It is currently a placeholder that forwards every request to the next middleware:
+
+```ts
+use(req, res, next) {
+  next();
+}
+```
+
+At the moment, requests do not need an API key. The middleware is also not registered in `UserModule` or `AppModule`, so it does not run automatically.
+
+When API-key protection is added, use a request header such as `x-api-key` and register the middleware for the routes that need protection. Store the expected key in an environment variable rather than hard-coding it or committing it to the repository.
+
+Example request format for the future protected API:
+
+```bash
+curl http://localhost:3000/user \
+  -H "x-api-key: <your-api-key>"
+```
+
 ## Project structure
 
 ```text
 src/
+├── middleware/
+│   └── api-key.middleware.ts   # API-key middleware placeholder
 ├── dto/
 │   ├── create-user.dto.ts     # Payload for creating a user
 │   └── update-user.dto.ts     # Partial user update DTO
