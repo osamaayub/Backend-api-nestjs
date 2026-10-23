@@ -16,4 +16,14 @@ describe('UserService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('should delete an existing user and return true', () => {
+    const result = service.deleteUser(1);
+    expect(result).toBe(true);
+  });
+
+  it('should return false when deleting a non-existent user', () => {
+    const result = service.deleteUser(999);
+    expect(result).toBe(false);
+  });
 });

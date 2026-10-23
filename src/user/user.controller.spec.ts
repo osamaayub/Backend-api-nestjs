@@ -18,4 +18,9 @@ describe('UserController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  it('should delete a user', () => {
+    const result = controller.deleteUser(1);
+    expect(result).toBe(true);
+  });
 });
