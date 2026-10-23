@@ -1,11 +1,17 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Request } from 'express';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  ): boolean  {
+    const request:Request=context.switchToHttp().getRequest()
+    const role=request.headers['role']
+    if(role!=='admin'){
+      throw new UnauthorizedException(" You're not allowed to preform  this action")
+    }
     return true;
   }
 }
